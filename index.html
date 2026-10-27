@@ -19,10 +19,11 @@ body{font-family:"Noto Sans JP","Hiragino Sans",sans-serif;background:#fff;color
 #map{flex:1;min-height:0}
 .mk{background:none;border:none}
 .mk svg{filter:drop-shadow(0 1px 2px rgba(0,0,0,.35));display:block}
-.mk .nw{position:absolute;top:-9px;right:-14px;background:#D62828;color:#fff;font-size:10px;font-weight:700;line-height:1;padding:3px 4px;border-radius:4px;border:1px solid #fff;white-space:nowrap}
+.mk .nw{position:absolute;top:-4px;right:-4px;width:11px;height:11px;padding:0;font-size:0;background:#D62828;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+.leaflet-tile-pane{filter:grayscale(.7) brightness(1.06) contrast(.92)}
 .st{background:none;border:none}
-.st span{display:inline-block;transform:translate(-50%,-50%);white-space:nowrap;background:#fff;color:#14213D;border:1.5px solid #14213D;border-radius:4px;padding:2px 6px;font-size:12px;font-weight:700;line-height:1.2;box-shadow:0 1px 2px rgba(0,0,0,.2)}
-.st span:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#14213D;margin-right:4px;vertical-align:1px}
+.st span{display:inline-block;transform:translate(-50%,-50%);white-space:nowrap;background:rgba(255,255,255,.85);color:#5a6478;border:1px solid #c9cfdb;border-radius:4px;padding:1px 5px;font-size:11px;font-weight:700;line-height:1.2}
+.st span:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#8a93a6;margin-right:3px;vertical-align:1px}
 .of{background:none;border:none}
 .of div{transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center}
 .of b{background:#C9A13B;color:#14213D;border:2px solid #fff;border-radius:8px;padding:4px 8px;font-size:12px;white-space:nowrap;box-shadow:0 2px 4px rgba(0,0,0,.35)}
@@ -44,7 +45,7 @@ body{font-family:"Noto Sans JP","Hiragino Sans",sans-serif;background:#fff;color
 footer{font-size:11px;color:#5a6478;padding:6px max(16px,env(safe-area-inset-left));background:#f4f5f8;border-top:1px solid #dde1ea;line-height:1.5}
 @media (max-width:480px){.lead .x{display:none}.lead{padding-block:6px}.ttl b{font-size:24px}#legend{padding-block:6px;gap:4px}.chip{padding:8px 10px;font-size:12px}.leaflet-popup-content{width:min(78vw,280px)!important}.card img{height:140px}.st span{font-size:11px}}</style></head><body>
 <div class="ttl"><div><small>最新物件情報</small><b>Map</b></div><span class="upd">2026年10月26日更新</span></div>
-<p class="lead">マークを押すと、価格と物件の内容が出ます。<span style="color:#D62828;font-weight:700">新着</span>は新しく出た物件です。<span class="x">番地が分かる物件は番地の位置、それ以外は町名・丁目のあたりに置いています。</span></p>
+<p class="lead">マークを押すと、価格と物件の内容が出ます。マークの右上の<span style="color:#D62828;font-weight:700">赤い点</span>は新しく出た物件です。<span class="x">番地が分かる物件は番地の位置、それ以外は町名・丁目のあたりに置いています。</span></p>
 <div id="legend" aria-label="種類で絞り込む"></div>
 <div id="map"></div>
 <footer>TKグランクス株式会社　大阪府知事(01)第067136号　全日本不動産協会 会員　大阪市西成区松1丁目6-15　TEL 090-5676-1912</footer>
@@ -56,7 +57,7 @@ const OF={"y": 34.639969, "x": 135.494232};
 const mob=matchMedia('(max-width:480px)').matches;
 const m=L.map('map',{tap:true});
 L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',{attribution:'<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">国土地理院</a>',maxZoom:18}).addTo(m);
-const w=mob?28:24,h=mob?33:28;
+const w=mob?30:28,h=mob?35:33;
 const G={
  tochi:{n:'売土地',c:'#2F7D4F',d:'<path d="M11 28 V7" stroke="#fff" stroke-width="2.6"/><path d="M12 8 L26 12 L12 17 Z" fill="#fff"/>'},
  kodate:{n:'中古戸建て',c:'#14213D',d:'<path d="M17 7 L28 16 H25 V28 H9 V16 H6 Z" fill="#fff"/><rect x="15" y="21" width="4" height="7" fill="#14213D"/>'},
@@ -70,7 +71,7 @@ const e=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"
 // 駅名（ズーム13以上で出す）
 const stL=L.layerGroup();
 ST.forEach(s=>L.marker([s[1],s[2]],{icon:L.divIcon({className:'st',html:'<span>'+e(s[0])+'</span>',iconSize:[0,0]}),interactive:false,keyboard:false,zIndexOffset:-500}).addTo(stL));
-const stShow=()=>{m.getZoom()>=13?stL.addTo(m):m.removeLayer(stL)};
+const stShow=()=>{m.getZoom()>=15?stL.addTo(m):m.removeLayer(stL)};
 const layers={};Object.keys(G).forEach(g=>layers[g]=L.layerGroup().addTo(m));
 P.forEach(p=>{
  const g=grp(p.k);
