@@ -11,6 +11,10 @@ html,body{margin:0;overflow-x:hidden;background:#fff;color:#14213D;font-family:"
 .ttl b{display:block;font-size:26px;font-weight:700;line-height:1.3}
 .row{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px 0 6px}
 .card{flex:0 0 300px;scroll-snap-align:start;border:1px solid #dde1ea;border-top:5px solid #C9A13B;border-radius:10px;padding:14px 16px;box-sizing:border-box;display:flex;flex-direction:column;text-decoration:none;color:#14213D;background:#fff}
+.ph{position:relative;margin:-14px -16px 10px;height:180px;overflow:hidden;background:#f3f4f7}
+.ph img{width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block}
+.ph img.contain{object-fit:contain;background:#fff}
+.ph .lbl{position:absolute;right:6px;bottom:6px;background:rgba(20,33,61,.82);color:#fff;font-size:11px;padding:2px 7px;border-radius:4px}
 .kind{font-size:12px;color:#5a6478}
 .name{font-size:16px;font-weight:700;margin:4px 0 2px;line-height:1.4}
 .price{font-size:24px;font-weight:700;color:#14213D;margin:2px 0 8px}
@@ -25,12 +29,14 @@ html,body{margin:0;overflow-x:hidden;background:#fff;color:#14213D;font-family:"
 <div class="ttl"><small>PICK UP</small><b>今週の一押し</b></div>
 <div class="row">
 <a class="card" href="https://tk-granks.co.jp/property/zAazjcPI" target="_top">
+<div class="ph"><img src="rivergarden_cg.jpg" alt="リバーガーデン岸里玉出の外観CG" loading="lazy"><span class="lbl">外観CG（イメージ）</span></div>
 <div class="kind">中古マンション｜大阪市西成区玉出中1丁目</div>
 <div class="name">リバーガーデン岸里玉出 9階</div>
 <div class="price">4,380<span>万円</span></div>
 <p class="why">南海「岸里玉出」駅から徒歩1分。<br>2019年築・20階建ての9階、66.13㎡の3LDKです（媒介）。</p>
 <div class="go">詳しく見る</div></a>
 <a class="card" href="https://tk-granks.co.jp/property/a_h01uxA" target="_top">
+<div class="ph"><img src="lions.jpg" alt="ライオンズマンション和歌山田中町の外観" loading="lazy"><span class="lbl">外観</span></div>
 <div class="kind">中古マンション｜和歌山市田中町3丁目</div>
 <div class="name">ライオンズマンション和歌山田中町 402号室</div>
 <div class="price">980<span>万円</span></div>
@@ -38,6 +44,7 @@ html,body{margin:0;overflow-x:hidden;background:#fff;color:#14213D;font-family:"
 <p class="note">告知事項あり（室内での火災・居住者の死亡）。内容はご契約の前に書面でご説明します。</p>
 <div class="go">詳しく見る</div></a>
 <a class="card" href="https://tk-granks.co.jp/property/19H4bvuH" target="_top">
+<div class="ph"><img class="contain" src="tamadehigashi_kukaku.jpg" alt="玉出東1丁目 新築分譲の区画図" loading="lazy"><span class="lbl">区画図</span></div>
 <div class="kind">新築一戸建て｜大阪市西成区玉出東1丁目</div>
 <div class="name">玉出東1丁目 新築分譲（全2棟）</div>
 <div class="price">4,680<span>万円（税込）</span></div>
