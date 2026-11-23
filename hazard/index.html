@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>西成区のハザードマップ（洪水・高潮・津波）｜TKグランクス</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+html,body{margin:0;height:100%;font-family:"Noto Sans JP",system-ui,sans-serif;color:#1a1a1a;background:#fff}
+#wrap{display:flex;flex-direction:column;height:100%}
+#bar{padding:8px 10px;border-bottom:1px solid #ddd;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+#bar button{font:inherit;font-size:14px;padding:7px 12px;border:1px solid #14213D;border-radius:18px;background:#fff;color:#14213D;cursor:pointer}
+#bar button.on{background:#14213D;color:#fff}
+#q{flex:1;min-width:160px;display:flex;gap:4px}
+#q input{flex:1;font:inherit;font-size:14px;padding:7px 8px;border:1px solid #bbb;border-radius:6px;min-width:0}
+#q button{border-radius:6px}
+#map{flex:1;min-height:300px}
+#legend{position:absolute;right:8px;bottom:22px;z-index:500;background:rgba(255,255,255,.95);padding:6px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+#legend img{display:block;width:150px}
+#legend .t{font-size:12px;font-weight:bold;margin-bottom:4px}
+#note{font-size:12px;line-height:1.6;padding:6px 10px;border-top:1px solid #ddd;max-height:28vh;overflow:auto}
+#note a{color:#14213D}
+@media(max-width:500px){#legend img{width:120px}#bar button{font-size:13px;padding:6px 10px}}
+</style></head><body>
+<div id="wrap">
+<div id="bar">
+  <button data-k="flood" class="on">洪水（川があふれた場合）</button>
+  <button data-k="keizoku">洪水の水が引くまでの時間</button>
+  <button data-k="hightide">高潮</button>
+  <button data-k="tsunami">津波</button>
+  <form id="q"><input id="qi" placeholder="住所で探す（例：西成区岸里東2）"><button>探す</button></form>
+</div>
+<div style="position:relative;flex:1;display:flex"><div id="map"></div>
+<div id="legend"><div class="t" id="lt"></div><img id="li" alt="凡例"></div></div>
+<div id="note">
+色は、国や大阪府が想定した最大規模の雨・高潮・津波で、浸水が想定される深さ（または水が引くまでの時間）です。想定を超えることもあります。地図の色は目安で、建物ごとの浸水の深さを示すものではありません。<br>
+避難所・津波避難ビルの場所と、内水（下水があふれる）の想定は、大阪市の
+<a href="https://www.city.osaka.lg.jp/kikikanrishitsu/page/0000300907.html" target="_blank" rel="noopener">水害ハザードマップ（西成区）</a>
+でご確認ください。<br>
+出典：「ハザードマップポータルサイト」（<a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">https://disaportal.gsi.go.jp/</a>）の洪水浸水想定区域（想定最大規模）・浸水継続時間（想定最大規模）・高潮浸水想定区域・津波浸水想定のタイルを重ねて表示（2026年11月23日に利用）。背景は地理院タイル（淡色地図）。住所検索は地理院地図の住所検索（協力：東大CSIS）。<br>
+物件ごとの水害リスクの説明は、売買・賃貸のご契約の前に、重要事項説明で書面でご説明します。TKグランクス株式会社 大阪府知事(01)第067136号
+</div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map=L.map('map',{zoomControl:true}).setView([34.638,135.488],14);
+L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',{maxZoom:18,attribution:'<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">地理院タイル</a>'}).addTo(map);
+const H='https://disaportaldata.gsi.go.jp/raster/';
+const LG='https://disaportal.gsi.go.jp/hazardmap/copyright/img/';
+const D={
+ flood:{u:'01_flood_l2_shinsuishin_data',t:'洪水で想定される浸水の深さ',l:'shinsui_legend3.png'},
+ keizoku:{u:'01_flood_l2_keizoku_data',t:'洪水の水が引くまでの時間',l:'shinsui_legend_l2_keizoku.png'},
+ hightide:{u:'03_hightide_l2_shinsuishin_data',t:'高潮で想定される浸水の深さ',l:'shinsui_legend3.png'},
+ tsunami:{u:'04_tsunami_newlegend_data',t:'津波で想定される浸水の深さ',l:'shinsui_legend3.png'}
+};
+const att='出典：<a href="https://disaportal.gsi.go.jp/" target="_blank">ハザードマップポータルサイト</a>';
+for(const k in D){D[k].layer=L.tileLayer(H+D[k].u+'/{z}/{x}/{y}.png',{opacity:.7,maxNativeZoom:17,maxZoom:18,attribution:att});}
+let cur=null;
+function show(k){if(cur)map.removeLayer(D[cur].layer);cur=k;D[k].layer.addTo(map);
+ document.getElementById('lt').textContent=D[k].t;document.getElementById('li').src=LG+D[k].l;
+ document.querySelectorAll('#bar button[data-k]').forEach(b=>b.classList.toggle('on',b.dataset.k===k));}
+document.querySelectorAll('#bar button[data-k]').forEach(b=>b.onclick=()=>show(b.dataset.k));
+const p=new URLSearchParams(location.search).get('l');show(D[p]?p:'flood');
+let mk=null;
+document.getElementById('q').onsubmit=async e=>{e.preventDefault();let q=document.getElementById('qi').value.trim();if(!q)return;
+ if(!/大阪/.test(q))q='大阪市'+(/西成/.test(q)?'':'西成区')+q;
+ try{const r=await fetch('https://msearch.gsi.go.jp/address-search/AddressSearch?q='+encodeURIComponent(q));const j=await r.json();
+  if(!j.length){alert('見つかりませんでした');return;}
+  const [lng,lat]=j[0].geometry.coordinates;map.setView([lat,lng],17);
+  if(mk)map.removeLayer(mk);mk=L.marker([lat,lng]).addTo(map).bindPopup(j[0].properties.title).openPopup();
+ }catch(err){alert('住所検索が使えませんでした');}
+};
+</script>
+</body></html>
